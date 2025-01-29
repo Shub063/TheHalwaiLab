@@ -1,0 +1,206 @@
+# Mithai Magic - Project Setup Guide
+
+## Project Structure
+```
+mithai-magic/
+├── client/                     # Frontend React application
+│   ├── public/
+│   │   ├── index.html
+│   │   └── favicon.ico
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── admin/
+│   │   │   │   ├── AdminDashboard.js
+│   │   │   │   ├── AdminSidebar.js
+│   │   │   │   ├── ProductManager.js
+│   │   │   │   └── CategoryManager.js
+│   │   │   ├── Navbar.js
+│   │   │   ├── CategoryCard.js
+│   │   │   └── ProductCard.js
+│   │   ├── contexts/
+│   │   │   └── AuthContext.js
+│   │   ├── pages/
+│   │   │   ├── HomePage.js
+│   │   │   ├── LoginPage.js
+│   │   │   └── AdminPage.js
+│   │   ├── utils/
+│   │   │   └── api.js
+│   │   ├── App.js
+│   │   └── index.js
+│   ├── package.json
+│   └── tailwind.config.js
+│
+├── server/                     # Backend Node.js/Express application
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── categoryController.js
+│   │   └── productController.js
+│   ├── middleware/
+│   │   ├── auth.js
+│   │   └── upload.js
+│   ├── models/
+│   │   ├── Category.js
+│   │   ├── Product.js
+│   │   └── User.js
+│   ├── routes/
+│   │   ├── auth.js
+│   │   ├── categories.js
+│   │   └── products.js
+│   ├── uploads/               # For storing uploaded images
+│   ├── package.json
+│   └── server.js
+│
+└── README.md
+```
+
+## Step-by-Step Setup Instructions
+
+1. Create the project root directory:
+```bash
+mkdir mithai-magic
+cd mithai-magic
+```
+
+2. Initialize the backend (server):
+```bash
+mkdir server
+cd server
+npm init -y
+
+# Install backend dependencies
+npm install express mongoose cors multer dotenv bcryptjs jsonwebtoken
+
+# Create necessary directories
+mkdir config controllers middleware models routes uploads
+```
+
+3. Set up the frontend (client):
+```bash
+# Go back to root directory
+cd ..
+
+# Create React app
+npx create-react-app client
+
+cd client
+
+# Install frontend dependencies
+npm install @heroicons/react axios react-router-dom react-responsive-carousel
+npm install -D tailwindcss postcss autoprefixer
+
+# Initialize Tailwind CSS
+npx tailwindcss init -p
+```
+
+4. Configure Tailwind CSS (in client/tailwind.config.js):
+```javascript
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          light: '#FF9F43',
+          DEFAULT: '#FF7F00',
+          dark: '#E67300',
+        },
+      },
+    },
+  },
+  plugins: [],
+}
+```
+
+5. Update client/src/index.css:
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+6. Create .env file in server directory:
+```bash
+cd server
+touch .env
+```
+
+Add the following to .env:
+```
+MONGODB_URI=mongodb+srv://skamboj063:<db_password>@cluster0.syfgc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+JWT_SECRET=your_jwt_secret_here
+PORT=5000
+```
+
+7. Create .env file in client directory:
+```bash
+cd ../client
+touch .env
+```
+
+Add the following to .env:
+```
+REACT_APP_API_URL=http://localhost:5000/api
+```
+
+## Running the Application
+
+1. Start the backend server:
+```bash
+cd server
+npm start
+```
+
+2. In a new terminal, start the frontend development server:
+```bash
+cd client
+npm start
+```
+
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+
+## Additional Setup Notes
+
+1. Make sure MongoDB is running and accessible
+2. Ensure the uploads directory has proper write permissions
+3. Replace placeholder values in .env files with your actual configuration
+4. For development, you might want to install nodemon:
+```bash
+cd server
+npm install -D nodemon
+```
+
+Then update package.json scripts:
+```json
+{
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  }
+}
+```
+
+For development, you can then use:
+```bash
+npm run dev
+```
+
+## Common Issues and Solutions
+
+1. If you get CORS errors:
+   - Ensure the cors middleware is properly configured in server.js
+   - Check that the API URL in the frontend matches the backend port
+
+2. If image uploads fail:
+   - Check uploads directory permissions
+   - Verify multer configuration in the backend
+
+3. If MongoDB connection fails:
+   - Verify your connection string
+   - Ensure IP whitelist is configured in MongoDB Atlas
+   - Check if <db_password> is replaced with your actual password
