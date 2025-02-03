@@ -1,24 +1,55 @@
 import express from 'express';
-import User from '../models/User.js'; // Adjust path as needed
+import User from '../models/User.js';
 
 const router = express.Router();
 
-// Login or register user
-router.post('/login', async (req, res) => {
+// Google login route
+router.post('/google-login', async (req, res) => {
   try {
-    const { phoneNumber } = req.body; // Ensure body contains `phoneNumber`
-    if (!phoneNumber) {
-      return res.status(400).json({ message: 'Phone number is required' });
+    const { email, displayName } = req.body;
+
+    // Validate input
+    if (!email || !displayName) {
+      return res.status(400).json({ message: 'Email & Name are required' });
     }
 
-    let user = await User.findOne({ phoneNumber });
+    // Check if the user already exists by email
+    let user = await User.findOne({ emailID: email });
+
+    // If user doesn't exist, create a new one
     if (!user) {
-      user = new User({ phoneNumber });
+      user = new User({
+        emailID: email,
+        userName: displayName, // No need to check for uniqueness
+        isAdmin: false // Always set isAdmin to false for new users
+      });
+
       await user.save();
     }
-    res.status(200).json({ user });
+
+    // Return user data
+    res.status(200).json({
+      user: {
+        emailID: user.emailID,
+        userName: user.userName,
+        isAdmin: user.isAdmin
+      }
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    console.error('Google login error:', error);
+    
+    // Handle duplicate key errors properly
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: 'Email already exists',
+        error: error.message
+      });
+    }
+
+    res.status(500).json({
+      message: 'Internal Server Error',
+      error: error.message
+    });
   }
 });
 

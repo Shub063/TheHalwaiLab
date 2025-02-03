@@ -1,89 +1,48 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { FaGoogle } from "react-icons/fa";
+import Footer from "./Footer";
+
 
 const Login = () => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [otp, setOtp] = useState('');
-  const [step, setStep] = useState('phone'); // 'phone' or 'otp'
-  const { login } = useAuth();
-  const navigate = useNavigate();
-
-  const handlePhoneSubmit = async (e) => {
-    e.preventDefault();
-    // In a real application, you would send OTP here
-    setStep('otp');
-  };
-
-  const handleOtpSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await login(phoneNumber);
-      navigate('/');
-    } catch (error) {
-      console.error('Login error:', error);
-    }
-  };
+  const { loginWithGoogle } = useAuth();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-orange-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-lg">
-        <div>
-          <h2 className="text-center text-3xl font-bold text-gray-800">
-            Welcome to Mithai Magic
-          </h2>
-          <p className="mt-2 text-center text-gray-600">
-            Login to access special offers and track your orders
-          </p>
+    <>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="max-w-md w-full space-y-6 p-8 bg-white rounded-2xl shadow-xl transform transition-all duration-300 hover:shadow-2xl">
+        {/* Branding Section */}
+        <div className="text-center">
+          {/* <img
+            src="/logo.png" // Replace with actual logo
+            alt="The Halwai Lab"
+            className="mx-auto w-24 h-24 object-cover rounded-full shadow-md"
+          /> */}
+          <h2 className="mt-4 text-3xl font-bold text-gray-800">Welcome to The Halwai Lab</h2>
+          <p className="mt-2 text-gray-600">Experience the finest Indian snacks!</p>
         </div>
 
-        {step === 'phone' ? (
-          <form onSubmit={handlePhoneSubmit} className="mt-8 space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Phone Number
-              </label>
-              <input
-                type="tel"
-                required
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                placeholder="Enter your phone number"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700"
-            >
-              Send OTP
-            </button>
-          </form>
-        ) : (
-          <form onSubmit={handleOtpSubmit} className="mt-8 space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Enter OTP
-              </label>
-              <input
-                type="text"
-                required
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-                placeholder="Enter OTP"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700"
-            >
-              Verify OTP
-            </button>
-          </form>
-        )}
+        {/* Google Login Button */}
+        <button
+          onClick={loginWithGoogle}
+          className="w-full flex items-center justify-center gap-3 py-3 px-6 border border-gray-300 rounded-lg shadow-md text-md font-semibold text-gray-700 bg-white hover:bg-gray-100 hover:scale-105 transition-transform duration-200"
+        >
+          <FaGoogle className="text-red-500 text-lg" />
+          Sign in with Google
+        </button>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-gray-500">
+          By signing in, you agree to our{" "}
+          <a href="/terms" className="text-orange-600 hover:underline">
+            Terms & Conditions
+          </a>
+          .
+        </p>
       </div>
     </div>
+    <Footer></Footer>
+    </>
   );
 };
 
