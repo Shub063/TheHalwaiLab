@@ -1,1 +1,41 @@
 "# HalwaiLab"  initgit add README.mdgit commit -m "first commit"git branch -M maingit remote add origin https://github.com/Shub063/HalwaiLab.gitgit push -u origin main
+
+To ensure that you do not accidentally push to the old repository (MithaiMagic.git) and correctly push the code to the new repository (TheHalwaiLab.git), follow these steps carefully:
+1. Remove the Old Git Remote (MithaiMagic)
+
+Since you pulled the code from another repository, it may still be linked to the old repo. First, check your current remotes:
+
+git remote -v
+
+If it shows MithaiMagic.git, remove it:
+
+git remote remove origin
+
+2. Initialize a Fresh Git Repository (Optional)
+
+If you want to ensure there is no connection with the old repo, reinitialize Git:
+
+rm -rf .git  # DANGER: This removes all Git history
+git init
+
+This will remove the old Git history and start a fresh repository.
+3. Add the New Repository (TheHalwaiLab.git)
+
+Now, link the repository to the new GitHub repo:
+
+git remote add origin https://github.com/Shub063/TheHalwaiLab.git
+
+Verify the remote is set correctly:
+
+git remote -v
+
+It should only show TheHalwaiLab.git.
+4. Add and Commit Files
+
+git add .
+git commit -m "Initial commit with existing code"
+
+5. Push to the New Repository
+
+git branch -M main
+git push -u origin main
